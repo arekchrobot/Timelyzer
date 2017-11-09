@@ -26,3 +26,20 @@ mvnw
 # Other files
 *.odt
 *.pdf
+
+# NPM and Angular #
+
+**/dist
+**/tmp
+**/out-tsc
+**/node_modules
+**/e2e/*.js
+**/e2e/*.map
+**/.sass-cache
+**/connect.lock
+**/coverage
+**/libpeerconnection.log
+**/npm-debug.log
+**/testem.log
+**/typings
+

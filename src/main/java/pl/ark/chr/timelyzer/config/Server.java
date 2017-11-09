@@ -39,11 +39,11 @@ public class Server {
     }
 
     public void start() {
-        Try.run(() -> this.ratpackServer.start());
+        Try.run(this.ratpackServer::start);
     }
 
     public void stop() {
-        Try.run(() -> this.ratpackServer.stop());
+        Try.run(this.ratpackServer::stop);
     }
 
     private RatpackServer createServer(RestEndpoint... endpoints) throws Exception {

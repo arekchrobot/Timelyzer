@@ -15,13 +15,14 @@ public class ApplicationProperties {
     private static final String JWT_SALT = "jwt.salt";
     private static final String AUTH_HEADER = "headerClient.headerName";
     private static final String AUTH_PREFIX_HEADER = "headerClient.PrefixHeader";
+    private static final String DB_MONGO_CONNECTION = "db.mongo.url";
+    private static final String DB_MONGO_DATABASE = "db.mongo.database";
 
     private static final Properties config = new Properties();
 
     static {
         try(InputStream is = ApplicationProperties.class.getClassLoader().getResourceAsStream("application.properties")) {
             config.load(is);
-            config.forEach((k,v) -> System.out.println("Key: " + k + ", value: " + v));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,5 +50,13 @@ public class ApplicationProperties {
 
     public static String getAuthPrefixHeader() {
         return config.getProperty(AUTH_PREFIX_HEADER);
+    }
+
+    public static String getDbMongoConnection() {
+        return config.getProperty(DB_MONGO_CONNECTION);
+    }
+
+    public static String getDbMongoDatabase() {
+        return config.getProperty(DB_MONGO_DATABASE);
     }
 }

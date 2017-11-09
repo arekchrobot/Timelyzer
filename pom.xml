@@ -15,6 +15,8 @@
         <javaslang.version>2.0.5</javaslang.version>
         <logback.version>1.0.13</logback.version>
         <jackson.version>2.8.8</jackson.version>
+        <mongo.version>3.5.0</mongo.version>
+        <mongo.reactive.version>1.6.0</mongo.reactive.version>
     </properties>
 
     <dependencies>
@@ -78,6 +80,18 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+
+        <!--MongoDB-->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>${mongo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-reactivestreams</artifactId>
+            <version>${mongo.reactive.version}</version>
         </dependency>
 
     </dependencies>
