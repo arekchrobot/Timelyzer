@@ -56,6 +56,7 @@ public class Server {
                     headerClient.setPrefixHeader(ApplicationProperties.getAuthPrefixHeader());
 
                     chain
+                            .all(new CORSHandler())
                             .all(RatpackPac4j.authenticator("callback", directFormClient, headerClient))
                             .get("auth", ctx -> RatpackPac4j.login(ctx, DirectFormClient.class).then(p -> {
 
