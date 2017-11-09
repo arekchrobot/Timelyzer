@@ -14,7 +14,6 @@ export class AppComponent {
   }
 
   testHttp() {
-    const request = new HttpRequest("GET", environment.apiUrl + "/api/test/get/User",);
     //should throw 401
     this.httpClient.get(environment.apiUrl + "/api/test/get/User")
       .subscribe((response) => {
