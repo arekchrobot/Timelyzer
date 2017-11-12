@@ -15,7 +15,7 @@ public class ApplicationProperties {
     private static final String JWT_SALT = "jwt.salt";
     private static final String AUTH_HEADER = "headerClient.headerName";
     private static final String AUTH_PREFIX_HEADER = "headerClient.PrefixHeader";
-    private static final String DB_MONGO_CONNECTION = "db.mongo.url";
+    private static final String DB_MONGO_CONNECTION = "db.mongo.connection";
     private static final String DB_MONGO_DATABASE = "db.mongo.database";
 
     private static final Properties config = new Properties();
