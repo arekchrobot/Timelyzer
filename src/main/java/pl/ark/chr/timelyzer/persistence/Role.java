@@ -1,7 +1,6 @@
 package pl.ark.chr.timelyzer.persistence;
 
-import org.mongodb.morphia.annotations.Embedded;
+public enum Role {
 
-@Embedded
-public class Role {
+    ADMIN, MANAGER, DEVELOPER
 }

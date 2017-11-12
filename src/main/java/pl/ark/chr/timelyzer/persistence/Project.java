@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
@@ -13,12 +15,13 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(value = "users", noClassnameStored = true)
-public class User {
+@Entity(value = "projects", noClassnameStored = true)
+public class Project {
 
     @Id
-    private String email;
-    private String password;
-    private Set<Role> roles;
-    private boolean active;
+    private ObjectId id;
+    private Set<String> users;
+    private String name;
+    @Embedded
+    private Set<TimeTrack> timeTracks;
 }
