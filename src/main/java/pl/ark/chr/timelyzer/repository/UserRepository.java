@@ -16,8 +16,8 @@ public class UserRepository extends CrudRepositoryImpl<User> implements CrudRepo
         return MongoConfig.mongoDatabase().getCollection("users", DBObject.class);
     }
 
-    public Publisher<DBObject> findByUsernameAndPassword(String username, String password) {
-        Bson filter = and(eq("_id", username), eq("password", password));
+    public Publisher<DBObject> findByUsername(String username) {
+        Bson filter = eq("_id", username);
 
         return getCollection().find(filter).first();
     }

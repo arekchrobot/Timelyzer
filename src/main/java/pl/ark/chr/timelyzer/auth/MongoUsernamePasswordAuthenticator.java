@@ -7,13 +7,16 @@ import org.pac4j.http.credentials.authenticator.UsernamePasswordAuthenticator;
 import org.pac4j.http.profile.HttpProfile;
 import pl.ark.chr.timelyzer.persistence.User;
 import pl.ark.chr.timelyzer.repository.UserRepository;
+import pl.ark.chr.timelyzer.util.ApplicationProperties;
 
 public class MongoUsernamePasswordAuthenticator implements UsernamePasswordAuthenticator {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordService bCryptPasswordService;
 
     public MongoUsernamePasswordAuthenticator(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.bCryptPasswordService = new BCryptPasswordService(ApplicationProperties.getBCryptStrength());
     }
 
     @Override
@@ -32,25 +35,27 @@ public class MongoUsernamePasswordAuthenticator implements UsernamePasswordAuthe
             this.throwsException("Password cannot be blank");
         }
 
-
         final User[] userFromDb = new User[1];
         AuthSubscriber authSubscriber = new AuthSubscriber((user) -> userFromDb[0] = user);
-        userRepository.findByUsernameAndPassword(username, password).subscribe(authSubscriber);
+        userRepository.findByUsername(username).subscribe(authSubscriber);
 
-        try {
-            authSubscriber.await();
-        } catch (InterruptedException e) {
-            this.throwsException("Error when susbcribing");
-            e.printStackTrace();
-        }
+        authSubscriber.await();
 
         if (userFromDb[0] == null) {
             throwsException("Username or password is wrong");
         } else {
+            validateUserPassword(credentials, username, userFromDb[0]);
+        }
+    }
+
+    private void validateUserPassword(UsernamePasswordCredentials credentials, String username, User user) {
+        if(bCryptPasswordService.passwordsMatch(credentials.getPassword(), user.getPassword())) {
             HttpProfile profile = new HttpProfile();
             profile.setId(username);
             profile.addAttribute("username", username);
             credentials.setUserProfile(profile);
+        } else {
+            this.throwsException("Passwords not match");
         }
     }
 

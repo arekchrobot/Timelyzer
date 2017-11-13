@@ -18,6 +18,7 @@ public class ApplicationProperties {
     private static final String DB_MONGO_HOST = "db.mongo.host";
     private static final String DB_MONGO_DATABASE = "db.mongo.database";
     private static final String DB_MONGO_PORT = "db.mongo.port";
+    private static final String BCRYPT_STRENGTH = "bCrypt.strength";
 
     private static final Properties config = new Properties();
 
@@ -63,5 +64,9 @@ public class ApplicationProperties {
 
     public static int getDbMongoPort() {
         return Integer.parseInt(config.getProperty(DB_MONGO_PORT));
+    }
+
+    public static int getBCryptStrength() {
+        return Integer.parseInt(config.getProperty(BCRYPT_STRENGTH));
     }
 }

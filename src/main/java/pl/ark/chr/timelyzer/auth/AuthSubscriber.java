@@ -48,9 +48,13 @@ class AuthSubscriber implements Subscriber<DBObject> {
         latch.countDown();
     }
 
-    public void await() throws InterruptedException {
-        if(!latch.await(Long.MAX_VALUE, TimeUnit.MILLISECONDS)) {
-            throw new CredentialsException("Error waiting for data from db. User will not be authenticated");
+    void await() {
+        try {
+            if(!latch.await(Long.MAX_VALUE, TimeUnit.MILLISECONDS)) {
+                throw new CredentialsException("Error waiting for data from db. User will not be authenticated");
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Error while authenticating user", e);
         }
     }
 }
