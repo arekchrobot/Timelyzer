@@ -1,4 +1,4 @@
-package pl.ark.chr.timelyzer.config;
+package pl.ark.chr.timelyzer.auth;
 
 import org.pac4j.core.authorization.Authorizer;
 import org.pac4j.core.client.Client;

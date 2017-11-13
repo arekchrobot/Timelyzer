@@ -15,8 +15,9 @@ public class ApplicationProperties {
     private static final String JWT_SALT = "jwt.salt";
     private static final String AUTH_HEADER = "headerClient.headerName";
     private static final String AUTH_PREFIX_HEADER = "headerClient.PrefixHeader";
-    private static final String DB_MONGO_CONNECTION = "db.mongo.connection";
+    private static final String DB_MONGO_HOST = "db.mongo.host";
     private static final String DB_MONGO_DATABASE = "db.mongo.database";
+    private static final String DB_MONGO_PORT = "db.mongo.port";
 
     private static final Properties config = new Properties();
 
@@ -52,11 +53,15 @@ public class ApplicationProperties {
         return config.getProperty(AUTH_PREFIX_HEADER);
     }
 
-    public static String getDbMongoConnection() {
-        return config.getProperty(DB_MONGO_CONNECTION);
+    public static String getDbMongoHost() {
+        return config.getProperty(DB_MONGO_HOST);
     }
 
     public static String getDbMongoDatabase() {
         return config.getProperty(DB_MONGO_DATABASE);
+    }
+
+    public static int getDbMongoPort() {
+        return Integer.parseInt(config.getProperty(DB_MONGO_PORT));
     }
 }

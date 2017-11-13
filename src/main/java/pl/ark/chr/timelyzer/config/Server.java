@@ -8,9 +8,11 @@ import javaslang.control.Try;
 import javaslang.jackson.datatype.JavaslangModule;
 import org.pac4j.http.client.direct.DirectFormClient;
 import org.pac4j.http.client.direct.HeaderClient;
-import org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator;
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 import org.pac4j.jwt.profile.JwtGenerator;
+import pl.ark.chr.timelyzer.auth.MongoUsernamePasswordAuthenticator;
+import pl.ark.chr.timelyzer.auth.Security;
+import pl.ark.chr.timelyzer.repository.UserRepository;
 import pl.ark.chr.timelyzer.rest.RestEndpoint;
 import pl.ark.chr.timelyzer.util.ApplicationProperties;
 import ratpack.error.ClientErrorHandler;
@@ -49,7 +51,7 @@ public class Server {
     private RatpackServer createServer(RestEndpoint... endpoints) throws Exception {
         return RatpackServer.of(server -> createEmptyServer(server)
                 .handlers(chain -> {
-                    DirectFormClient directFormClient = new DirectFormClient(new SimpleTestUsernamePasswordAuthenticator());
+                    DirectFormClient directFormClient = new DirectFormClient(new MongoUsernamePasswordAuthenticator(new UserRepository()));
 
                     HeaderClient headerClient = new HeaderClient(new JwtAuthenticator(ApplicationProperties.getJwtSalt()));
                     headerClient.setHeaderName(ApplicationProperties.getAuthHeader());
@@ -59,10 +61,9 @@ public class Server {
                             .all(new CORSHandler())
                             .all(RatpackPac4j.authenticator("callback", directFormClient, headerClient))
                             .get("auth", ctx -> RatpackPac4j.login(ctx, DirectFormClient.class).then(p -> {
-
                                 final JwtGenerator generator = new JwtGenerator(ApplicationProperties.getJwtSalt());
                                 final String token = generator.generate(p);
-                                ctx.render("{" + "\"token\":" + "\""+ token+"\"}");
+                                ctx.render("{" + "\"token\":" + "\"" + token + "\"}");
                             }))
                             .post("logout", logout -> {
                                 RatpackPac4j.logout(logout);
