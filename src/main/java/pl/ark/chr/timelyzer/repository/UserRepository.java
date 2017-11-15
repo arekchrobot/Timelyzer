@@ -7,7 +7,7 @@ import org.reactivestreams.Publisher;
 import pl.ark.chr.timelyzer.config.MongoConfig;
 import pl.ark.chr.timelyzer.persistence.User;
 
-import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Filters.eq;
 
 public class UserRepository extends CrudRepositoryImpl<User> implements CrudRepository<User> {
 
