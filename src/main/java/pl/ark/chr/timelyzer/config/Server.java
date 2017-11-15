@@ -14,7 +14,7 @@ import pl.ark.chr.timelyzer.auth.MongoUsernamePasswordAuthenticator;
 import pl.ark.chr.timelyzer.auth.Security;
 import pl.ark.chr.timelyzer.repository.UserRepository;
 import pl.ark.chr.timelyzer.rest.RestEndpoint;
-import pl.ark.chr.timelyzer.util.ApplicationProperties;
+import pl.ark.chr.timelyzer.util.AppProps;
 import ratpack.error.ClientErrorHandler;
 import ratpack.error.ServerErrorHandler;
 import ratpack.guice.Guice;
@@ -53,15 +53,15 @@ public class Server {
                 .handlers(chain -> {
                     DirectFormClient directFormClient = new DirectFormClient(new MongoUsernamePasswordAuthenticator(new UserRepository()));
 
-                    HeaderClient headerClient = new HeaderClient(new JwtAuthenticator(ApplicationProperties.getJwtSalt()));
-                    headerClient.setHeaderName(ApplicationProperties.getAuthHeader());
-                    headerClient.setPrefixHeader(ApplicationProperties.getAuthPrefixHeader());
+                    HeaderClient headerClient = new HeaderClient(new JwtAuthenticator(AppProps.instance().getJwtSalt()));
+                    headerClient.setHeaderName(AppProps.instance().getAuthHeader());
+                    headerClient.setPrefixHeader(AppProps.instance().getAuthPrefixHeader());
 
                     chain
                             .all(new CORSHandler())
                             .all(RatpackPac4j.authenticator("callback", directFormClient, headerClient))
                             .get("auth", ctx -> RatpackPac4j.login(ctx, DirectFormClient.class).then(p -> {
-                                final JwtGenerator generator = new JwtGenerator(ApplicationProperties.getJwtSalt());
+                                final JwtGenerator generator = new JwtGenerator(AppProps.instance().getJwtSalt());
                                 final String token = generator.generate(p);
                                 ctx.render("{" + "\"token\":" + "\"" + token + "\"}");
                             }))
@@ -81,9 +81,9 @@ public class Server {
                         ServerConfig
                                 .builder()
                                 .baseDir(currentRelativePath)
-                                .publicAddress(new URI(ApplicationProperties.getServerAddress()))
-                                .port(ApplicationProperties.getServerPort())
-                                .threads(ApplicationProperties.getServerThreads())
+                                .publicAddress(new URI(AppProps.instance().getServerAddress()))
+                                .port(AppProps.instance().getServerPort())
+                                .threads(AppProps.instance().getServerThreads())
                 )
                 .registry(Guice.registry(b -> b
                                 .bindInstance(ServerErrorHandler.class, (ctx, error) -> {

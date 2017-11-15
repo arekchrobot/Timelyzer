@@ -13,7 +13,7 @@ public class UserRepository extends CrudRepositoryImpl<User> implements CrudRepo
 
     @Override
     protected MongoCollection<DBObject> getCollection() {
-        return MongoConfig.mongoDatabase().getCollection("users", DBObject.class);
+        return MongoConfig.instance().mongoDatabase().getCollection("users", DBObject.class);
     }
 
     public Publisher<DBObject> findByUsername(String username) {

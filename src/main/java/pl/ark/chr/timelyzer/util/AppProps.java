@@ -7,7 +7,7 @@ import java.util.Properties;
 /**
  * Created by Arek on 2017-06-18.
  */
-public class ApplicationProperties {
+public class AppProps {
 
     private static final String SERVER_PORT = "server.port";
     private static final String SERVER_ADDRESS = "server.address";
@@ -20,53 +20,66 @@ public class ApplicationProperties {
     private static final String DB_MONGO_PORT = "db.mongo.port";
     private static final String BCRYPT_STRENGTH = "bCrypt.strength";
 
-    private static final Properties config = new Properties();
+    private final Properties config = new Properties();
 
-    static {
-        try(InputStream is = ApplicationProperties.class.getClassLoader().getResourceAsStream("application.properties")) {
+    private static AppProps instance;
+
+    private AppProps() {
+        try (InputStream is = AppProps.class.getClassLoader().getResourceAsStream("application.properties")) {
             config.load(is);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static int getServerPort() {
+    public static AppProps instance() {
+        if(instance == null) {
+            synchronized (AppProps.class) {
+                if(instance == null) {
+                    instance = new AppProps();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public int getServerPort() {
         return Integer.parseInt(config.getProperty(SERVER_PORT));
     }
 
-    public static int getServerThreads() {
+    public int getServerThreads() {
         return Integer.parseInt(config.getProperty(SERVER_THREADS));
     }
 
-    public static String getServerAddress() {
+    public String getServerAddress() {
         return config.getProperty(SERVER_ADDRESS);
     }
 
-    public static String getJwtSalt() {
+    public String getJwtSalt() {
         return config.getProperty(JWT_SALT);
     }
 
-    public static String getAuthHeader() {
+    public String getAuthHeader() {
         return config.getProperty(AUTH_HEADER);
     }
 
-    public static String getAuthPrefixHeader() {
+    public String getAuthPrefixHeader() {
         return config.getProperty(AUTH_PREFIX_HEADER);
     }
 
-    public static String getDbMongoHost() {
+    public String getDbMongoHost() {
         return config.getProperty(DB_MONGO_HOST);
     }
 
-    public static String getDbMongoDatabase() {
+    public String getDbMongoDatabase() {
         return config.getProperty(DB_MONGO_DATABASE);
     }
 
-    public static int getDbMongoPort() {
+    public int getDbMongoPort() {
         return Integer.parseInt(config.getProperty(DB_MONGO_PORT));
     }
 
-    public static int getBCryptStrength() {
+    public int getBCryptStrength() {
         return Integer.parseInt(config.getProperty(BCRYPT_STRENGTH));
     }
 }

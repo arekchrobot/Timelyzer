@@ -7,7 +7,7 @@ import org.pac4j.http.credentials.authenticator.UsernamePasswordAuthenticator;
 import org.pac4j.http.profile.HttpProfile;
 import pl.ark.chr.timelyzer.persistence.User;
 import pl.ark.chr.timelyzer.repository.UserRepository;
-import pl.ark.chr.timelyzer.util.ApplicationProperties;
+import pl.ark.chr.timelyzer.util.AppProps;
 
 public class MongoUsernamePasswordAuthenticator implements UsernamePasswordAuthenticator {
 
@@ -16,7 +16,7 @@ public class MongoUsernamePasswordAuthenticator implements UsernamePasswordAuthe
 
     public MongoUsernamePasswordAuthenticator(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.bCryptPasswordService = new BCryptPasswordService(ApplicationProperties.getBCryptStrength());
+        this.bCryptPasswordService = new BCryptPasswordService(AppProps.instance().getBCryptStrength());
     }
 
     @Override

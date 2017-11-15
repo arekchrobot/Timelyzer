@@ -8,11 +8,11 @@ public class MongoObjectConverter {
 
     public static <T extends Object> T toPojo(DBObject entity, Class<T> targetClass) {
         //datastore as null since we only use for mapping
-        Mapper mapper = MongoConfig.morphia().getMapper();
+        Mapper mapper = MongoConfig.instance().morphia().getMapper();
         return mapper.fromDBObject(null, targetClass, entity, mapper.createEntityCache());
     }
 
     public static DBObject toDBObject(Object entity) {
-        return MongoConfig.morphia().getMapper().toDBObject(entity);
+        return MongoConfig.instance().morphia().getMapper().toDBObject(entity);
     }
 }

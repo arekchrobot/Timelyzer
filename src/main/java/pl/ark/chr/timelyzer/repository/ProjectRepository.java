@@ -13,7 +13,7 @@ public class ProjectRepository extends CrudRepositoryImpl<Project> implements Cr
 
     @Override
     protected MongoCollection<DBObject> getCollection() {
-        return MongoConfig.mongoDatabase().getCollection("projects", DBObject.class);
+        return MongoConfig.instance().mongoDatabase().getCollection("projects", DBObject.class);
     }
 
     public Publisher<DBObject> findAllByUser(String username) {

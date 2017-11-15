@@ -7,36 +7,49 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import org.mongodb.morphia.Morphia;
-import pl.ark.chr.timelyzer.util.ApplicationProperties;
+import pl.ark.chr.timelyzer.util.AppProps;
 
 import java.util.Collections;
 
 public class MongoConfig {
 
-    private static MongoClient mongoClient;
-    private static MongoDatabase mongoDatabase;
-    private static Morphia morphia;
+    private MongoClient mongoClient;
+    private MongoDatabase mongoDatabase;
+    private Morphia morphia;
 
-    static {
-        ServerAddress serverAddress = new ServerAddress(ApplicationProperties.getDbMongoHost(), ApplicationProperties.getDbMongoPort());
+    private static MongoConfig instance;
+
+    private MongoConfig() {
+        ServerAddress serverAddress = new ServerAddress(AppProps.instance().getDbMongoHost(), AppProps.instance().getDbMongoPort());
         ClusterSettings clusterSettings = ClusterSettings.builder().hosts(Collections.singletonList(serverAddress)).build();
         MongoClientSettings mongoSettings = MongoClientSettings.builder()
                 .codecRegistry(com.mongodb.MongoClient.getDefaultCodecRegistry())
                 .clusterSettings(clusterSettings).build();
         mongoClient = MongoClients.create(mongoSettings);
-        mongoDatabase = mongoClient.getDatabase(ApplicationProperties.getDbMongoDatabase());
+        mongoDatabase = mongoClient.getDatabase(AppProps.instance().getDbMongoDatabase());
         morphia = new Morphia().mapPackage("pl.ark.chr.timelyzer.persistence");
     }
 
-    public static MongoDatabase mongoDatabase() {
+    public static MongoConfig instance() {
+        if(instance == null) {
+            synchronized (MongoConfig.class) {
+                if(instance == null) {
+                    instance = new MongoConfig();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public MongoDatabase mongoDatabase() {
         return mongoDatabase;
     }
 
-    public static Morphia morphia() {
+    public Morphia morphia() {
         return morphia;
     }
 
-    public static void close() {
+    public void close() {
         mongoClient.close();
     }
 }
