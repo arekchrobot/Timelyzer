@@ -22,8 +22,6 @@ public class AppProps {
 
     private final Properties config = new Properties();
 
-    private static AppProps instance;
-
     private AppProps() {
         try (InputStream is = AppProps.class.getClassLoader().getResourceAsStream("application.properties")) {
             config.load(is);
@@ -32,15 +30,12 @@ public class AppProps {
         }
     }
 
+    private static class SingletonHelper {
+        private static final AppProps INSTANCE = new AppProps();
+    }
+
     public static AppProps instance() {
-        if(instance == null) {
-            synchronized (AppProps.class) {
-                if(instance == null) {
-                    instance = new AppProps();
-                }
-            }
-        }
-        return instance;
+        return SingletonHelper.INSTANCE;
     }
 
     public int getServerPort() {

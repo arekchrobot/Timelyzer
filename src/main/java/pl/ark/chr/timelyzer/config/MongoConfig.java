@@ -17,8 +17,6 @@ public class MongoConfig {
     private MongoDatabase mongoDatabase;
     private Morphia morphia;
 
-    private static MongoConfig instance;
-
     private MongoConfig() {
         ServerAddress serverAddress = new ServerAddress(AppProps.instance().getDbMongoHost(), AppProps.instance().getDbMongoPort());
         ClusterSettings clusterSettings = ClusterSettings.builder().hosts(Collections.singletonList(serverAddress)).build();
@@ -30,15 +28,12 @@ public class MongoConfig {
         morphia = new Morphia().mapPackage("pl.ark.chr.timelyzer.persistence");
     }
 
+    private static class SingletonHelper {
+        private static final MongoConfig INSTANCE = new MongoConfig();
+    }
+
     public static MongoConfig instance() {
-        if(instance == null) {
-            synchronized (MongoConfig.class) {
-                if(instance == null) {
-                    instance = new MongoConfig();
-                }
-            }
-        }
-        return instance;
+        return SingletonHelper.INSTANCE;
     }
 
     public MongoDatabase mongoDatabase() {
