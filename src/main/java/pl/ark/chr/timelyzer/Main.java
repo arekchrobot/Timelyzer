@@ -1,6 +1,8 @@
 package pl.ark.chr.timelyzer;
 
+import pl.ark.chr.timelyzer.auth.MongoUsernamePasswordAuthenticator;
 import pl.ark.chr.timelyzer.config.Server;
+import pl.ark.chr.timelyzer.repository.UserRepository;
 import pl.ark.chr.timelyzer.rest.TestEndpoint;
 
 /**
@@ -9,7 +11,8 @@ import pl.ark.chr.timelyzer.rest.TestEndpoint;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Server server = new Server(new TestEndpoint());
+        MongoUsernamePasswordAuthenticator authenticator = new MongoUsernamePasswordAuthenticator(new UserRepository());
+        Server server = new Server(authenticator, new TestEndpoint());
         server.start();
     }
 }

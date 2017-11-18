@@ -20,6 +20,10 @@
         <lombok.version>1.16.0</lombok.version>
         <morphia.version>1.3.2</morphia.version>
         <jBcrypt.version>0.4.1</jBcrypt.version>
+        <junit.version>4.12</junit.version>
+        <assertj.version>3.2.0</assertj.version>
+        <embedmongo.version>2.0.0</embedmongo.version>
+        <fluent.exception.version>1.0.1</fluent.exception.version>
     </properties>
 
     <dependencies>
@@ -113,6 +117,39 @@
             <artifactId>jBCrypt</artifactId>
             <version>${jBcrypt.version}</version>
         </dependency>
+
+        <!--Test-->
+        <dependency>
+            <groupId>io.ratpack</groupId>
+            <artifactId>ratpack-test</artifactId>
+            <version>${ratpack.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>${embedmongo.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.wkr</groupId>
+            <artifactId>fluent-exception-rule</artifactId>
+            <version>${fluent.exception.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 

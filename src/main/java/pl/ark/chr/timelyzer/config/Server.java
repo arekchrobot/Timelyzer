@@ -8,11 +8,10 @@ import javaslang.control.Try;
 import javaslang.jackson.datatype.JavaslangModule;
 import org.pac4j.http.client.direct.DirectFormClient;
 import org.pac4j.http.client.direct.HeaderClient;
+import org.pac4j.http.credentials.authenticator.UsernamePasswordAuthenticator;
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 import org.pac4j.jwt.profile.JwtGenerator;
-import pl.ark.chr.timelyzer.auth.MongoUsernamePasswordAuthenticator;
 import pl.ark.chr.timelyzer.auth.Security;
-import pl.ark.chr.timelyzer.repository.UserRepository;
 import pl.ark.chr.timelyzer.rest.RestEndpoint;
 import pl.ark.chr.timelyzer.util.AppProps;
 import ratpack.error.ClientErrorHandler;
@@ -36,8 +35,8 @@ public class Server {
 
     private final RatpackServer ratpackServer;
 
-    public Server(RestEndpoint... endpoints) {
-        this.ratpackServer = Try.of(() -> createServer(endpoints)).get();
+    public Server(UsernamePasswordAuthenticator authenticator, RestEndpoint... endpoints) {
+        this.ratpackServer = Try.of(() -> createServer(authenticator, endpoints)).get();
     }
 
     public void start() {
@@ -48,10 +47,14 @@ public class Server {
         Try.run(this.ratpackServer::stop);
     }
 
-    private RatpackServer createServer(RestEndpoint... endpoints) throws Exception {
+    public RatpackServer getRatpackServer() {
+        return ratpackServer;
+    }
+
+    private RatpackServer createServer(UsernamePasswordAuthenticator authenticator, RestEndpoint... endpoints) throws Exception {
         return RatpackServer.of(server -> createEmptyServer(server)
                 .handlers(chain -> {
-                    DirectFormClient directFormClient = new DirectFormClient(new MongoUsernamePasswordAuthenticator(new UserRepository()));
+                    DirectFormClient directFormClient = new DirectFormClient(authenticator);
 
                     HeaderClient headerClient = new HeaderClient(new JwtAuthenticator(AppProps.instance().getJwtSalt()));
                     headerClient.setHeaderName(AppProps.instance().getAuthHeader());
