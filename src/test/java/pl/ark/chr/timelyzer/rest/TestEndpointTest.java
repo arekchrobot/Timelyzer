@@ -1,17 +1,13 @@
 package pl.ark.chr.timelyzer.rest;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator;
 import pl.ark.chr.timelyzer.config.Server;
 import pl.ark.chr.timelyzer.util.AppProps;
 import ratpack.http.client.ReceivedResponse;
 import ratpack.test.embed.EmbeddedApp;
-import ratpack.test.http.TestHttpClient;
-
-import java.io.IOException;
+import util.AuthorizationUtil;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -21,15 +17,6 @@ public class TestEndpointTest {
         SimpleTestUsernamePasswordAuthenticator authenticator = new SimpleTestUsernamePasswordAuthenticator();
         Server server = new Server(authenticator, new TestEndpoint());
         return EmbeddedApp.fromServer(server.getRatpackServer());
-    }
-
-    private String getAuthToken(TestHttpClient testHttpClient) throws IOException {
-        final ReceivedResponse receivedResponse = testHttpClient.get("/auth?username=test&password=test");
-
-        assertThat(receivedResponse.getStatusCode()).isEqualTo(200);
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node = objectMapper.readTree(receivedResponse.getBody().getText());
-        return node.get("token").asText();
     }
 
     @Test
@@ -47,7 +34,7 @@ public class TestEndpointTest {
     @Test
     public void shouldRenderHelloText() throws Exception {
         prepareServer().test(testHttpClient -> {
-            final String authToken = getAuthToken(testHttpClient);
+            final String authToken = AuthorizationUtil.getAuthToken(testHttpClient);
 
             final ReceivedResponse response = testHttpClient.requestSpec(rs ->
                     rs.headers(mh -> mh.add(AppProps.instance().getAuthHeader(), AppProps.instance().getAuthPrefixHeader() + authToken)))
@@ -61,7 +48,7 @@ public class TestEndpointTest {
     @Test
     public void shouldGetJson() throws Exception {
         prepareServer().test(testHttpClient -> {
-            final String authToken = getAuthToken(testHttpClient);
+            final String authToken = AuthorizationUtil.getAuthToken(testHttpClient);
 
             final ReceivedResponse response = testHttpClient.requestSpec(rs ->
                     rs.headers(mh -> mh.add(AppProps.instance().getAuthHeader(), AppProps.instance().getAuthPrefixHeader() + authToken)))
@@ -75,7 +62,7 @@ public class TestEndpointTest {
     @Test
     public void shouldPostProjectAndProperlyParse() throws Exception {
         prepareServer().test(testHttpClient -> {
-            final String authToken = getAuthToken(testHttpClient);
+            final String authToken = AuthorizationUtil.getAuthToken(testHttpClient);
 
             final String postBody = "{\"id\":{\"$oid\":\"5a1041228055fe142868fc1c\"},\"users\":null,\"name\":null,\"timeTracks\":null}";
 

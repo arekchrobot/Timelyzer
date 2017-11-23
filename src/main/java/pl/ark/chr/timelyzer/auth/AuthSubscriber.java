@@ -1,6 +1,7 @@
 package pl.ark.chr.timelyzer.auth;
 
 import com.mongodb.DBObject;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.exception.CredentialsException;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -11,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+@Slf4j
 class AuthSubscriber implements Subscriber<DBObject> {
 
     private final Consumer<User> consumer;
@@ -35,7 +37,7 @@ class AuthSubscriber implements Subscriber<DBObject> {
     @Override
     public void onError(Throwable throwable) {
         latch.countDown();
-        throwable.printStackTrace();
+        log.error("Error getting user from database to auth.", throwable);
     }
 
     @Override
