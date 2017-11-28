@@ -7,6 +7,7 @@ import org.pac4j.core.profile.UserProfile;
 import pl.ark.chr.timelyzer.rest.RestEndpoint;
 import ratpack.func.Action;
 import ratpack.handling.Chain;
+import ratpack.handling.Context;
 import ratpack.pac4j.RatpackPac4j;
 
 /**
@@ -15,16 +16,16 @@ import ratpack.pac4j.RatpackPac4j;
 public class Security {
 
     public static <C extends Credentials, U extends UserProfile> Action<Chain> auth(Class<? extends Client<C, U>> clientClass) {
-        return chain -> chain.all(RatpackPac4j.requireAuth(clientClass));
+        return chain -> chain.onlyIf(Security::shouldRequireAuth, RatpackPac4j.requireAuth(clientClass));
     }
 
     public static <C extends Credentials, U extends UserProfile> Action<Chain> auth(Class<? extends Client<C, U>> clientClass, Authorizer<? super U>... authorizers) {
-        return chain -> chain.all(RatpackPac4j.requireAuth(clientClass, authorizers));
+        return chain -> chain.onlyIf(Security::shouldRequireAuth, RatpackPac4j.requireAuth(clientClass));
     }
 
     public static <C extends Credentials, U extends UserProfile> Action<Chain> auth(Class<? extends Client<C, U>> clientClass, RestEndpoint[] endpoints) {
         return chain -> {
-            chain = chain.all(RatpackPac4j.requireAuth(clientClass));
+            chain = chain.onlyIf(Security::shouldRequireAuth, RatpackPac4j.requireAuth(clientClass));
 
             for (RestEndpoint endpoint : endpoints) {
                 chain = chain.prefix(endpoint.getApiPrefix(), endpoint.defineActions());
@@ -32,13 +33,19 @@ public class Security {
         };
     }
 
-    public static <C extends Credentials, U extends UserProfile> Action<Chain> auth(Class<? extends Client<C, U>> clientClass,  RestEndpoint[] endpoints, Authorizer<? super U>... authorizers) {
+    public static <C extends Credentials, U extends UserProfile> Action<Chain> auth(Class<? extends Client<C, U>> clientClass, RestEndpoint[] endpoints, Authorizer<? super U>... authorizers) {
         return chain -> {
-            chain = chain.all(RatpackPac4j.requireAuth(clientClass, authorizers));
+            chain = chain.onlyIf(Security::shouldRequireAuth, RatpackPac4j.requireAuth(clientClass));
 
             for (RestEndpoint endpoint : endpoints) {
                 chain = chain.prefix(endpoint.getApiPrefix(), endpoint.defineActions());
             }
         };
+    }
+
+    private static boolean shouldRequireAuth(Context context) {
+        return context.getRequest().getMethod().isGet() || context.getRequest().getMethod().isPost()
+                || context.getRequest().getMethod().isDelete() || context.getRequest().getMethod().isPut()
+                || context.getRequest().getMethod().isPatch();
     }
 }

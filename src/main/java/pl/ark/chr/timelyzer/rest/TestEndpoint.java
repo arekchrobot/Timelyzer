@@ -25,7 +25,6 @@ public class TestEndpoint implements RestEndpoint {
                 .prefix("get", ctx ->
                         ctx.get(":id", handler -> {
                             String id = handler.getPathTokens().get("id");
-                            Project p = Project.builder().id(new ObjectId()).build();
                             RatpackPac4j.userProfile(handler)
                                     .then((userProfile -> handler.render("Hello " + id + " " + userProfile.get().getId())));
                         })
