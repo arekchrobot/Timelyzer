@@ -66,7 +66,7 @@ describe('LoginComponent', () => {
       let emailInput = fixture.debugElement.query(By.css("#email")).nativeElement;
       emailInput.value = 'test@gmail.com';
       emailInput.dispatchEvent(new Event('input'));
-      component.loginForm.controls['username'].markAsTouched(true);
+      component.loginForm.controls['username'].markAsTouched();
       fixture.detectChanges();
       let emailError = fixture.debugElement.query(By.css('small'));
       expect(emailError).not.toBeTruthy();
@@ -78,7 +78,7 @@ describe('LoginComponent', () => {
       let emailInput = fixture.debugElement.query(By.css("#email")).nativeElement;
       emailInput.value = 'test@t';
       emailInput.dispatchEvent(new Event('input'));
-      component.loginForm.controls['username'].markAsTouched(true);
+      component.loginForm.controls['username'].markAsTouched();
       fixture.detectChanges();
       let emailError = fixture.debugElement.query(By.css('small'));
       expect(emailError).toBeTruthy();
@@ -91,7 +91,7 @@ describe('LoginComponent', () => {
       let passwordInput = fixture.debugElement.query(By.css("#password")).nativeElement;
       passwordInput.value = 'testPass';
       passwordInput.dispatchEvent(new Event('input'));
-      component.loginForm.controls['password'].markAsTouched(true);
+      component.loginForm.controls['password'].markAsTouched();
       fixture.detectChanges();
       let passError = fixture.debugElement.query(By.css('small'));
       expect(passError).not.toBeTruthy();
@@ -103,7 +103,7 @@ describe('LoginComponent', () => {
       let passwordInput = fixture.debugElement.query(By.css("#password")).nativeElement;
       passwordInput.value = '';
       passwordInput.dispatchEvent(new Event('input'));
-      component.loginForm.controls['password'].markAsTouched(true);
+      component.loginForm.controls['password'].markAsTouched();
       fixture.detectChanges();
       let passError = fixture.debugElement.query(By.css('small'));
       expect(passError).toBeTruthy();
