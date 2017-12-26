@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-md-offset-2">
+    <div class="alert alert-danger" role="alert" *ngIf="loginFailed">
+      <strong>Error!</strong> Invalid credentials. Please try again
+    </div>
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="username" ngModel #username="ngModel" class="form-control"
+               required email pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}">
+        <small class="form-text text-muted" *ngIf="!username.valid && username.touched">Please enter a valid email!</small>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" ngModel #pass="ngModel" class="form-control" required>
+        <small class="form-text text-muted" *ngIf="!pass.valid && pass.touched">Please enter a password!</small>
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="!loginForm.valid">Sign in</button>
+    </form>
+  </div>
+</div>

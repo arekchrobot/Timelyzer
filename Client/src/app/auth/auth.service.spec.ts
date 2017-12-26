@@ -25,7 +25,7 @@ describe('AuthService', () => {
       };
 
       const authService = getTestBed().get(AuthService);
-      authService.authorize(new Credentials("test", "test"));
+      authService.authorize(new Credentials("test", "test")).subscribe(response => expect(response).toBeTruthy());
 
       const req = httpMock.expectOne(request => request.method === 'GET' && request.url === environment.apiUrl + '/auth?username=test&password=test');
 
@@ -40,7 +40,10 @@ describe('AuthService', () => {
     (httpMock: HttpTestingController) => {
 
       const authService = getTestBed().get(AuthService);
-      authService.authorize(new Credentials("test", "test"));
+      authService.authorize(new Credentials("test", "test")).subscribe(response => {}, error => {
+        expect(error.status).toBe(500);
+        expect(error.statusText).toBe("ERROR");
+      });
 
       const req = httpMock.expectOne(request => request.method === 'GET' && request.url === environment.apiUrl + '/auth?username=test&password=test');
 
