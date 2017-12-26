@@ -7,6 +7,7 @@ import {HttpClientTestingModule, HttpTestingController} from "@angular/common/ht
 import {RouterTestingModule} from "@angular/router/testing";
 import {By} from "@angular/platform-browser";
 import {Router} from "@angular/router";
+import {MaterialModule} from "../../material.module";
 
 class MockRouter {
   navigateByUrl(url: string) {
@@ -21,7 +22,7 @@ describe('LoginComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LoginComponent],
-      imports: [FormsModule, HttpClientTestingModule, RouterTestingModule],
+      imports: [FormsModule, HttpClientTestingModule, RouterTestingModule, MaterialModule],
       providers: [
         {
           provide: Router,
@@ -68,7 +69,7 @@ describe('LoginComponent', () => {
       emailInput.dispatchEvent(new Event('input'));
       component.loginForm.controls['username'].markAsTouched();
       fixture.detectChanges();
-      let emailError = fixture.debugElement.query(By.css('small'));
+      let emailError = fixture.debugElement.query(By.css('mat-error'));
       expect(emailError).not.toBeTruthy();
     });
   });
@@ -80,7 +81,7 @@ describe('LoginComponent', () => {
       emailInput.dispatchEvent(new Event('input'));
       component.loginForm.controls['username'].markAsTouched();
       fixture.detectChanges();
-      let emailError = fixture.debugElement.query(By.css('small'));
+      let emailError = fixture.debugElement.query(By.css('mat-error'));
       expect(emailError).toBeTruthy();
       expect(emailError.nativeElement.innerText).toBe('Please enter a valid email!');
     });
@@ -93,7 +94,7 @@ describe('LoginComponent', () => {
       passwordInput.dispatchEvent(new Event('input'));
       component.loginForm.controls['password'].markAsTouched();
       fixture.detectChanges();
-      let passError = fixture.debugElement.query(By.css('small'));
+      let passError = fixture.debugElement.query(By.css('mat-error'));
       expect(passError).not.toBeTruthy();
     });
   });
@@ -105,7 +106,7 @@ describe('LoginComponent', () => {
       passwordInput.dispatchEvent(new Event('input'));
       component.loginForm.controls['password'].markAsTouched();
       fixture.detectChanges();
-      let passError = fixture.debugElement.query(By.css('small'));
+      let passError = fixture.debugElement.query(By.css('mat-error'));
       expect(passError).toBeTruthy();
       expect(passError.nativeElement.innerText).toBe('Please enter a password!');
     });
@@ -146,7 +147,7 @@ describe('LoginComponent', () => {
       const url = routerSpy.calls.first().args[0];
       expect(url).toBe('/home');
 
-      let loginFailedMsg = fixture.debugElement.query(By.css(".alert-danger"));
+      let loginFailedMsg = fixture.debugElement.query(By.css("#loginError"));
       expect(loginFailedMsg).toBeNull();
 
       httpMock.verify();
@@ -173,7 +174,7 @@ describe('LoginComponent', () => {
 
       expect(routerSpy).not.toHaveBeenCalled();
 
-      let loginFailedMsg = fixture.debugElement.query(By.css(".alert-danger"));
+      let loginFailedMsg = fixture.debugElement.query(By.css("#loginError"));
       expect(loginFailedMsg).not.toBeNull();
       expect(loginFailedMsg.nativeElement.innerText).toBe('Error! Invalid credentials. Please try again');
 

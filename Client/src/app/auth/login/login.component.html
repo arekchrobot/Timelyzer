@@ -1,21 +1,32 @@
-<div class="row">
-  <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-md-offset-2">
-    <div class="alert alert-danger" role="alert" *ngIf="loginFailed">
+<mat-card>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>Login</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <br/>
+  <mat-card-content>
+    <mat-error *ngIf="loginFailed" id="loginError">
       <strong>Error!</strong> Invalid credentials. Please try again
-    </div>
+    </mat-error>
     <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="username" ngModel #username="ngModel" class="form-control"
+
+      <mat-form-field>
+        <input type="email" id="email" name="username" ngModel #username="ngModel" matInput placeholder="Email"
                required email pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}">
-        <small class="form-text text-muted" *ngIf="!username.valid && username.touched">Please enter a valid email!</small>
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" ngModel #pass="ngModel" class="form-control" required>
-        <small class="form-text text-muted" *ngIf="!pass.valid && pass.touched">Please enter a password!</small>
-      </div>
-      <button class="btn btn-primary" type="submit" [disabled]="!loginForm.valid">Sign in</button>
+        <mat-error *ngIf="!username.valid && username.touched">Please enter a valid email!</mat-error>
+      </mat-form-field>
+
+      <br/>
+      <mat-form-field>
+        <input type="password" id="password" name="password" ngModel
+               #pass="ngModel" placeholder="Password" matInput required>
+        <mat-error *ngIf="!pass.valid && pass.touched">Please enter a password!</mat-error>
+      </mat-form-field>
+
+      <br/>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Sign in</button>
+
     </form>
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>
