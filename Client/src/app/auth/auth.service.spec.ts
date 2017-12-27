@@ -6,6 +6,7 @@ import {environment} from "../../environments/environment";
 
 describe('AuthService', () => {
   beforeEach(() => {
+    localStorage.clear();
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [

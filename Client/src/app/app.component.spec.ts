@@ -4,6 +4,7 @@ import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {AuthService} from "./auth/auth.service";
 import {Routes} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
+import {MaterialModule} from "./material.module";
 describe('AppComponent', () => {
 
   beforeEach(async(() => {
@@ -11,7 +12,7 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
-      imports: [HttpClientTestingModule, RouterTestingModule],
+      imports: [HttpClientTestingModule, RouterTestingModule, MaterialModule],
       providers: [AuthService]
     }).compileComponents();
   }));

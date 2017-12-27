@@ -10,6 +10,10 @@ export class AuthService {
   token: string = null;
 
   constructor(private httpClient: HttpClient) {
+    let savedToken = localStorage.getItem("jwt");
+    if(savedToken !== null) {
+      this.token = savedToken;
+    }
   }
 
   getToken(): string {
@@ -20,6 +24,7 @@ export class AuthService {
     return this.httpClient.get(environment.apiUrl + "/auth?username=" + credentials.username + "&password=" + credentials.password)
       .map((response) => {
         this.token = response["token"];
+        localStorage.setItem("jwt", this.token);
         return response;
       });
   }

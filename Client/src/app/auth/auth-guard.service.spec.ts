@@ -19,6 +19,7 @@ class MockAuthService extends AuthService {
 
 describe('AuthGuard', () => {
   beforeEach(() => {
+    localStorage.clear();
     TestBed.configureTestingModule({
       providers: [
         {
