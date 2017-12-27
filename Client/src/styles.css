@@ -1,3 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
+.material-shadow {
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12);
+}
+
+@media screen and (max-width: 480px) {
+  .login-input {
+    width: 80%
+  }
+
+  .login-card {
+    width: 80%;
+    margin: auto;
+  }
+}
+
+@media screen and (min-width: 480px) {
+  .login-input {
+    width: 60%
+  }
+
+  .login-card {
+    width: 60%;
+    margin: auto;
+  }
+}

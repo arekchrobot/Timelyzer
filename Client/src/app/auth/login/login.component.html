@@ -1,6 +1,6 @@
-<mat-card>
+<mat-card class="login-card">
   <mat-toolbar color="primary">
-    <mat-toolbar-row>
+    <mat-toolbar-row class="material-shadow">
       <span>Login</span>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -11,14 +11,14 @@
     </mat-error>
     <form (ngSubmit)="onLogin()" #loginForm="ngForm">
 
-      <mat-form-field>
+      <mat-form-field class="login-input">
         <input type="email" id="email" name="username" ngModel #username="ngModel" matInput placeholder="Email"
                required email pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}">
         <mat-error *ngIf="!username.valid && username.touched">Please enter a valid email!</mat-error>
       </mat-form-field>
 
       <br/>
-      <mat-form-field>
+      <mat-form-field class="login-input">
         <input type="password" id="password" name="password" ngModel
                #pass="ngModel" placeholder="Password" matInput required>
         <mat-error *ngIf="!pass.valid && pass.touched">Please enter a password!</mat-error>
