@@ -26,3 +26,8 @@
     margin: auto;
   }
 }
+
+.align-right {
+  margin-left:auto !important;
+  margin-right:0 !important;
+}

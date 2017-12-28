@@ -1,5 +1,6 @@
 <mat-toolbar color="primary" class="material-shadow">
   <button mat-button>Timelyzer</button>
+  <app-logout class="align-right" *ngIf="isLogged()"></app-logout>
 </mat-toolbar>
 <br/>
 <router-outlet></router-outlet>

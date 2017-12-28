@@ -33,6 +33,9 @@ describe('AuthService', () => {
       req.flush(mockResponse);
 
       expect(authService.getToken()).toEqual('TEST123');
+      let tokenFromLS = localStorage.getItem("jwt");
+      expect(tokenFromLS).not.toBeNull();
+      expect(tokenFromLS).toEqual("TEST123");
       httpMock.verify();
     })
   );
@@ -54,4 +57,25 @@ describe('AuthService', () => {
       httpMock.verify();
     })
   );
+
+  it('should logout and remove token', inject([HttpTestingController], (httpMock: HttpTestingController) => {
+    const mockResponse = {
+      'token': 'TEST123'
+    };
+
+    const authService = getTestBed().get(AuthService);
+    authService.authorize(new Credentials("test", "test")).subscribe(response => expect(response).toBeTruthy());
+
+    const req = httpMock.expectOne(request => request.method === 'GET' && request.url === environment.apiUrl + '/auth?username=test&password=test');
+
+    req.flush(mockResponse);
+    expect(authService.getToken()).toEqual('TEST123');
+
+    authService.logout();
+    expect(authService.getToken()).toBeNull();
+    let tokenFromLS = localStorage.getItem("jwt");
+    expect(tokenFromLS).toBeNull();
+
+    httpMock.verify();
+  }));
 });
