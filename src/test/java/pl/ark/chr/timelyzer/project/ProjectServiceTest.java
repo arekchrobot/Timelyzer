@@ -111,9 +111,13 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void shouldReturnSummedUpValuesForLastWeekForUserByTrackType() {
+    public void shouldReturnSummedUpValuesForLastWeekForUserByTrackType() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
         final Map<TrackType, Integer> retrievedProjects = new HashMap<>();
+        //UPDATE: 2018-02-28
+        //Workaround for com.mongodb.MongoSocketReadException: Prematurely reached end of stream
+        Thread.sleep(8000);
+        //END workaround
         sut.getWeeklySumUpForTrackTypes("test@gmail.com").thenAccept(trackTypeIntegerMap -> {
             try {
                 retrievedProjects.putAll(trackTypeIntegerMap);

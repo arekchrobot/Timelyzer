@@ -4,8 +4,6 @@ import com.mongodb.DBObjectCodec;
 import com.mongodb.ServerAddress;
 import com.mongodb.async.client.MongoClientSettings;
 import com.mongodb.connection.ClusterSettings;
-import com.mongodb.connection.ConnectionPoolSettings;
-import com.mongodb.connection.SocketSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
@@ -17,7 +15,6 @@ import pl.ark.chr.timelyzer.config.converters.LocalDateConverter;
 import pl.ark.chr.timelyzer.util.AppProps;
 
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
 public class MongoConfig {
 
@@ -28,14 +25,9 @@ public class MongoConfig {
 
     private MongoConfig() {
         ServerAddress serverAddress = new ServerAddress(AppProps.instance().getDbMongoHost(), AppProps.instance().getDbMongoPort());
-        SocketSettings socketSettings = SocketSettings.builder().connectTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS).build();
-        ConnectionPoolSettings connectionPoolSettings = ConnectionPoolSettings.builder().maxConnectionIdleTime(60, TimeUnit.SECONDS).maxWaitTime(60, TimeUnit.SECONDS)
-                .build();
         ClusterSettings clusterSettings = ClusterSettings.builder().hosts(Collections.singletonList(serverAddress)).build();
         MongoClientSettings mongoSettings = MongoClientSettings.builder()
                 .codecRegistry(com.mongodb.MongoClient.getDefaultCodecRegistry())
-                .socketSettings(socketSettings)
-                .connectionPoolSettings(connectionPoolSettings)
                 .clusterSettings(clusterSettings).build();
         mongoClient = MongoClients.create(mongoSettings);
         mongoDatabase = mongoClient.getDatabase(AppProps.instance().getDbMongoDatabase());
