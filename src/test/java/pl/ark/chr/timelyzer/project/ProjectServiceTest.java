@@ -114,10 +114,6 @@ public class ProjectServiceTest {
     public void shouldReturnSummedUpValuesForLastWeekForUserByTrackType() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
         final Map<TrackType, Integer> retrievedProjects = new HashMap<>();
-        //UPDATE: 2018-02-28
-        //Workaround for com.mongodb.MongoSocketReadException: Prematurely reached end of stream
-        Thread.sleep(8000);
-        //END workaround
         sut.getWeeklySumUpForTrackTypes("test@gmail.com").thenAccept(trackTypeIntegerMap -> {
             try {
                 retrievedProjects.putAll(trackTypeIntegerMap);
@@ -141,6 +137,33 @@ public class ProjectServiceTest {
     }
 
     @Test
+    public void shouldReturnEmptySummedUpValuesForLastWeekForUserByTrackType() throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final Map<TrackType, Integer> retrievedProjects = new HashMap<>();
+        //UPDATE: 2018-02-28
+        //Workaround for com.mongodb.MongoSocketReadException: Prematurely reached end of stream
+        Thread.sleep(8000);
+        //END workaround
+        sut.getWeeklySumUpForTrackTypes("testWrong").thenAccept(trackTypeIntegerMap -> {
+            try {
+                retrievedProjects.putAll(trackTypeIntegerMap);
+            } catch (Exception ex) {
+
+                ex.printStackTrace();
+            } finally {
+                latch.countDown();
+            }
+        });
+
+        try {
+            latch.await(2000, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            fail("Waited too long for async task to finish");
+        }
+        assertThat(retrievedProjects).isNotNull().isEmpty();
+    }
+
+    @Test
     public void shouldConvertToWeeklySumUpForTrackTypes() {
         TimeTrack t1 = TimeTrack.builder().type(TrackType.BUGFIX).duration(2).build();
         TimeTrack t2 = TimeTrack.builder().type(TrackType.DEVELOPMENT).duration(2).build();
@@ -155,6 +178,13 @@ public class ProjectServiceTest {
         assertThat(result.get(TrackType.DEVELOPMENT)).isNotNull().isEqualTo(8);
         assertThat(result.get(TrackType.RESEARCH)).isNotNull().isEqualTo(2);
         assertThat(result.get(TrackType.BUGFIX)).isNotNull().isEqualTo(10);
+    }
+
+    @Test
+    public void shouldConvertToEmptyWeeklySumUpForTrackTypes() {
+        Map<TrackType, Integer> result = sut.convertToWeeklySumUpForTrackTypes(new ArrayList<>());
+
+        assertThat(result.keySet()).isNotNull().isEmpty();
     }
 
     @Test
@@ -190,6 +220,34 @@ public class ProjectServiceTest {
     }
 
     @Test
+    public void shouldReturnEmptyWeeklySumUpForProjects() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final Map<String, Map<String, Integer>> weeklySummary = new LinkedHashMap<>();
+        sut.getWeeklySumUpForProjects("testWrong").thenAccept(weeklySummaryForProjects -> {
+            try {
+                weeklySummary.putAll(weeklySummaryForProjects);
+            } catch (Exception ex) {
+
+                ex.printStackTrace();
+            } finally {
+                latch.countDown();
+            }
+        });
+
+        try {
+            latch.await(2000, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            fail("Waited too long for async task to finish");
+        }
+
+        List<String> lastWeekDates = generateLastWeekDates();
+
+        assertThat(weeklySummary).isNotNull().isNotEmpty().hasSize(8);
+        assertThat(weeklySummary.keySet()).containsExactlyElementsOf(lastWeekDates);
+        weeklySummary.values().forEach(projectTimeMap -> assertThat(projectTimeMap).isEmpty());
+    }
+
+    @Test
     public void shouldConvertToSumUpObject() {
         Project p1 = createTestProject("TestProj");
         Project p2 = createTestProject("TestProj2");
@@ -198,6 +256,14 @@ public class ProjectServiceTest {
         Map<String, Map<LocalDate, Integer>> projectSumUps = sut.convertToSumUpObject(Arrays.asList(p1, p2, p3));
 
         assertThat(projectSumUps).isNotNull().isNotEmpty().hasSize(3);
+        projectSumUps.keySet().forEach(project -> assertThat(projectSumUps.get(project)).isNotNull().isNotEmpty().hasSize(4));
+    }
+
+    @Test
+    public void shouldConvertToEmptySumUpObject() {
+        Map<String, Map<LocalDate, Integer>> projectSumUps = sut.convertToSumUpObject(new ArrayList<>());
+
+        assertThat(projectSumUps).isNotNull().isEmpty();
         projectSumUps.keySet().forEach(project -> assertThat(projectSumUps.get(project)).isNotNull().isNotEmpty().hasSize(4));
     }
 
@@ -235,6 +301,17 @@ public class ProjectServiceTest {
         assertThat(weeklySumUpForProjects.get(lastWeekDates.get(5)).get("TestProj2")).isEqualTo(2);
         assertThat(weeklySumUpForProjects.get(lastWeekDates.get(6)).get("TestProj3")).isEqualTo(7);
         assertThat(weeklySumUpForProjects.get(lastWeekDates.get(7)).get("TestProj3")).isEqualTo(0);
+    }
+
+    @Test
+    public void shouldConvertToEmptyWeeklySumUpForProjects() {
+        Map<String, Map<String, Integer>> weeklySumUpForProjects = sut.convertToWeeklySumUpForProjects(new HashMap<>());
+
+        List<String> lastWeekDates = generateLastWeekDates();
+
+        assertThat(weeklySumUpForProjects).isNotNull().isNotEmpty().hasSize(8);
+        assertThat(weeklySumUpForProjects.keySet()).containsExactlyElementsOf(lastWeekDates);
+        weeklySumUpForProjects.keySet().forEach(date -> assertThat(weeklySumUpForProjects.get(date)).isEmpty());
     }
 
     private Project createTestProject(String projectName) {
