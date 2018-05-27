@@ -1,6 +1,5 @@
 package pl.ark.chr.timelyzer.project;
 
-import pl.ark.chr.timelyzer.repository.ProjectRepository;
 import pl.ark.chr.timelyzer.rest.RestEndpoint;
 import ratpack.exec.Promise;
 import ratpack.func.Action;
@@ -14,10 +13,6 @@ public class ProjectEndpoint implements RestEndpoint {
 
     public ProjectEndpoint(ProjectService projectService) {
         this.projectService = projectService;
-    }
-
-    public static ProjectEndpoint defaultInstance() {
-        return new ProjectEndpoint(new ProjectService(new ProjectRepository()));
     }
 
     @Override
