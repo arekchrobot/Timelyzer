@@ -12,6 +12,7 @@ import pl.ark.chr.timelyzer.rest.TestEndpoint;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        DevDataCreator.createData();
         MongoUsernamePasswordAuthenticator authenticator = ServiceFactory.mongoUsernamePasswordAuthenticator();
         Server server = new Server(authenticator, new TestEndpoint(), EndpointFactory.projectEndpoint());
         server.start();

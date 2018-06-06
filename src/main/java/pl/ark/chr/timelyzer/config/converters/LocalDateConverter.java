@@ -45,8 +45,8 @@ public class LocalDateConverter extends TypeConverter implements SimpleValueConv
             return null;
         }
         LocalDate date = (LocalDate) value;
-        return Date.from(date.atStartOfDay()
+        return date.atStartOfDay()
                 .atZone(systemDefault())
-                .toInstant());
+                .toInstant().toEpochMilli();
     }
 }

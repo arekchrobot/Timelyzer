@@ -19,7 +19,7 @@ public class LocalDateCodec implements Codec<LocalDate> {
 
     @Override
     public void encode(BsonWriter bsonWriter, LocalDate date, EncoderContext encoderContext) {
-        bsonWriter.writeDateTime(date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        bsonWriter.writeInt64(date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
     }
 
     @Override

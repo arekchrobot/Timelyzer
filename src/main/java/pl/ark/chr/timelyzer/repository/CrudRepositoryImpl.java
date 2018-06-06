@@ -1,8 +1,10 @@
 package pl.ark.chr.timelyzer.repository;
 
 import com.mongodb.DBObject;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.Success;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.reactivestreams.Publisher;
 import pl.ark.chr.timelyzer.util.MongoObjectConverter;
@@ -38,5 +40,10 @@ public abstract class CrudRepositoryImpl<T extends Object> implements CrudReposi
     @Override
     public Publisher<DBObject> getAll() {
         return getCollection().find();
+    }
+
+    @Override
+    public Publisher<DeleteResult> deleteAll() {
+        return getCollection().deleteMany(new Document());
     }
 }

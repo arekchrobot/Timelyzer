@@ -30,6 +30,64 @@ public class ProjectEndpoint implements RestEndpoint {
                                         .get("username")
                                 ))
                         ).then(projects -> handler.render(json(projects)))
+                )
+                .get("weeklySumUpTracks", handler ->
+                        Promise.async(downstream -> downstream.accept(projectService.getWeeklySumUpForTrackTypes(handler
+                                        .getRequest()
+                                        .getQueryParams()
+                                        .get("username")
+                                ))
+                        ).then(sumUp -> handler.render(json(sumUp)))
+                )
+                .get("weeklySumUpProjects", handler ->
+                        Promise.async(downstream -> downstream.accept(projectService.getWeeklySumUpForProjects(handler
+                                        .getRequest()
+                                        .getQueryParams()
+                                        .get("username")
+                                ))
+                        ).then(sumUp -> handler.render(json(sumUp)))
                 );
     }
+
+//    WEEKLY SUMUP:
+//    {
+//        "2018-05-29": {
+//        "Project2Test": 0,
+//                "Project1Test": 0
+//    },
+//        "2018-05-30": {
+//        "Project2Test": 0,
+//                "Project1Test": 0
+//    },
+//        "2018-05-31": {
+//        "Project2Test": 0,
+//                "Project1Test": 0
+//    },
+//        "2018-06-01": {
+//        "Project2Test": 0,
+//                "Project1Test": 0
+//    },
+//        "2018-06-02": {
+//        "Project2Test": 0,
+//                "Project1Test": 3
+//    },
+//        "2018-06-03": {
+//        "Project2Test": 0,
+//                "Project1Test": 0
+//    },
+//        "2018-06-04": {
+//        "Project2Test": 5,
+//                "Project1Test": 0
+//    },
+//        "2018-06-05": {
+//        "Project2Test": 0,
+//                "Project1Test": 0
+//    }
+//    }
+
+//    WEEKLY PROJECTS:
+//    {
+//        "DEVELOPMENT": 5,
+//            "RESEARCH": 3
+//    }
 }
