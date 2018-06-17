@@ -69,7 +69,7 @@ public class ProjectEndpointTest {
     }
 
     @Test
-    public void shouldReturnEmptyArrayWhenUserIsNotExisting() throws Exception {
+    public void shouldReturnEmptyArrayWhenUserHasNoResults() throws Exception {
         String expectedResult = "[]";
 
         responseFromService = new CompletableFuture<>();
@@ -81,7 +81,7 @@ public class ProjectEndpointTest {
 
             final ReceivedResponse response = testHttpClient.requestSpec(rs ->
                     rs.headers(mh -> mh.add(AppProps.instance().getAuthHeader(), AppProps.instance().getAuthPrefixHeader() + authToken)))
-                    .get("/api/project/byUsername?username=wrongTest");
+                    .get("/api/project/byUsername?username=test");
 
             assertThat(response).isNotNull();
             assertThat(response.getBody().getText()).isNotEmpty().isEqualTo(expectedResult);
@@ -164,8 +164,8 @@ public class ProjectEndpointTest {
     }
 
     @Test
-    public void shouldReturnEmptyWeeklySumUpTracksForUser() throws Exception {
-        String expectedResult = "{}";
+    public void shouldReturn403ForbiddenWhenInvalidUser() throws Exception {
+        String expectedResult = "403 ERROR";
 
         responseFromTracks = new CompletableFuture<>();
 
@@ -179,6 +179,7 @@ public class ProjectEndpointTest {
                     .get("/api/project/weeklySumUpTracks?username=test123");
 
             assertThat(response).isNotNull();
+            assertThat(response.getStatusCode()).isEqualTo(403);
             assertThat(response.getBody().getText()).isNotEmpty().isEqualTo(expectedResult);
         });
     }

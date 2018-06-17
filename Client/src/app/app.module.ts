@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 import {AuthGuard} from "./auth/auth-guard.service";
 import {AuthModule} from "./auth/auth.module";
 import {CoreModule} from "./core/core.module";
+import {ProjectService} from "./project/project.service";
 
 const appRoutes: Routes = [
   {path: "login", component: LoginComponent},
@@ -40,7 +41,8 @@ const appRoutes: Routes = [
       useFactory: authInterceptorFactory,
       multi: true,
       deps: [Router]
-    }
+    },
+    ProjectService
   ],
   bootstrap: [AppComponent]
 })

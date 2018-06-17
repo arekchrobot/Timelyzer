@@ -28,14 +28,18 @@ describe('AuthService', () => {
       const authService = getTestBed().get(AuthService);
       authService.authorize(new Credentials("test", "test")).subscribe(response => expect(response).toBeTruthy());
 
-      const req = httpMock.expectOne(request => request.method === 'GET' && request.url === environment.apiUrl + '/auth?username=test&password=test');
+      const req = httpMock.expectOne(request => request.method === 'GET' && request.urlWithParams === environment.apiUrl + '/auth?username=test&password=test');
 
       req.flush(mockResponse);
 
       expect(authService.getToken()).toEqual('TEST123');
+      expect(authService.getUsername()).toEqual("test");
       let tokenFromLS = localStorage.getItem("jwt");
+      let usernameFromLS = localStorage.getItem("username");
       expect(tokenFromLS).not.toBeNull();
       expect(tokenFromLS).toEqual("TEST123");
+      expect(usernameFromLS).not.toBeNull();
+      expect(usernameFromLS).toEqual("test");
       httpMock.verify();
     })
   );
@@ -49,11 +53,12 @@ describe('AuthService', () => {
         expect(error.statusText).toBe("ERROR");
       });
 
-      const req = httpMock.expectOne(request => request.method === 'GET' && request.url === environment.apiUrl + '/auth?username=test&password=test');
+      const req = httpMock.expectOne(request => request.method === 'GET' && request.urlWithParams === environment.apiUrl + '/auth?username=test&password=test');
 
       req.flush({},{status: 500, statusText: 'ERROR'});
 
       expect(authService.getToken()).toBeNull();
+      expect(authService.getUsername()).toBeNull();
       httpMock.verify();
     })
   );
@@ -66,15 +71,18 @@ describe('AuthService', () => {
     const authService = getTestBed().get(AuthService);
     authService.authorize(new Credentials("test", "test")).subscribe(response => expect(response).toBeTruthy());
 
-    const req = httpMock.expectOne(request => request.method === 'GET' && request.url === environment.apiUrl + '/auth?username=test&password=test');
+    const req = httpMock.expectOne(request => request.method === 'GET' && request.urlWithParams === environment.apiUrl + '/auth?username=test&password=test');
 
     req.flush(mockResponse);
     expect(authService.getToken()).toEqual('TEST123');
 
     authService.logout();
     expect(authService.getToken()).toBeNull();
+    expect(authService.getUsername()).toBeNull();
     let tokenFromLS = localStorage.getItem("jwt");
+    let usernameFromLS = localStorage.getItem("username");
     expect(tokenFromLS).toBeNull();
+    expect(usernameFromLS).toBeNull();
 
     httpMock.verify();
   }));

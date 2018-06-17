@@ -1,5 +1,6 @@
 package pl.ark.chr.timelyzer.project;
 
+import pl.ark.chr.timelyzer.filters.SameUserAccessHandler;
 import pl.ark.chr.timelyzer.rest.RestEndpoint;
 import ratpack.exec.Promise;
 import ratpack.func.Action;
@@ -23,6 +24,7 @@ public class ProjectEndpoint implements RestEndpoint {
     @Override
     public Action<Chain> defineActions() {
         return chain -> chain
+                .all(new SameUserAccessHandler())
                 .get("byUsername", handler ->
                         Promise.async(downstream -> downstream.accept(projectService.getAllProjectsForUser(handler
                                         .getRequest()
@@ -48,46 +50,4 @@ public class ProjectEndpoint implements RestEndpoint {
                         ).then(sumUp -> handler.render(json(sumUp)))
                 );
     }
-
-//    WEEKLY SUMUP:
-//    {
-//        "2018-05-29": {
-//        "Project2Test": 0,
-//                "Project1Test": 0
-//    },
-//        "2018-05-30": {
-//        "Project2Test": 0,
-//                "Project1Test": 0
-//    },
-//        "2018-05-31": {
-//        "Project2Test": 0,
-//                "Project1Test": 0
-//    },
-//        "2018-06-01": {
-//        "Project2Test": 0,
-//                "Project1Test": 0
-//    },
-//        "2018-06-02": {
-//        "Project2Test": 0,
-//                "Project1Test": 3
-//    },
-//        "2018-06-03": {
-//        "Project2Test": 0,
-//                "Project1Test": 0
-//    },
-//        "2018-06-04": {
-//        "Project2Test": 5,
-//                "Project1Test": 0
-//    },
-//        "2018-06-05": {
-//        "Project2Test": 0,
-//                "Project1Test": 0
-//    }
-//    }
-
-//    WEEKLY PROJECTS:
-//    {
-//        "DEVELOPMENT": 5,
-//            "RESEARCH": 3
-//    }
 }

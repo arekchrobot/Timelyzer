@@ -71,17 +71,17 @@ public class DevDataCreator {
 
         @Override
         public void onNext(final T t) {
-            System.out.println(t.toString());
+
         }
 
         @Override
         public void onError(final Throwable t) {
-            System.out.println(t.toString());
+
         }
 
         @Override
         public void onComplete() {
-            System.out.println("Finished");
+
         }
     }
 
@@ -98,7 +98,7 @@ public class DevDataCreator {
 
         @Override
         public void onNext(final T t) {
-            System.out.println(t.toString());
+
         }
 
         @Override
